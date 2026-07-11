@@ -1,139 +1,72 @@
-const text=document.getElementById("text");
+// Save QR as JPG
+async function download(url) {
 
-const qr=document.getElementById("qr");
+    try {
 
-const history=document.getElementById("history");
+        // Load image
+        const img = new Image();
+        img.crossOrigin = "anonymous";
 
-let currentURL="";
+        img.onload = async () => {
 
-loadHistory();
+            // Create canvas
+            const canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
 
-document.getElementById("generate").onclick=()=>{
+            const ctx = canvas.getContext("2d");
 
-if(text.value.trim()==""){
+            // White background (JPG doesn't support transparency)
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-alert("Enter text");
+            // Draw QR
+            ctx.drawImage(img, 0, 0);
 
-return;
+            // Convert to JPG
+            canvas.toBlob(async (blob) => {
 
-}
+                if (window.showSaveFilePicker) {
 
-currentURL=`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(text.value)}`;
+                    const handle = await window.showSaveFilePicker({
 
-qr.src=currentURL;
+                        suggestedName: "QRCode.jpg",
 
-qr.style.display="block";
+                        types: [{
+                            description: "JPEG Image",
+                            accept: {
+                                "image/jpeg": [".jpg"]
+                            }
+                        }]
 
-saveHistory(text.value,currentURL);
+                    });
 
-};
+                    const writable = await handle.createWritable();
+                    await writable.write(blob);
+                    await writable.close();
 
-document.getElementById("download").onclick=()=>{
+                    alert("QR Code saved as JPG.");
 
-if(currentURL=="") return;
+                } else {
 
-const a=document.createElement("a");
+                    const a = document.createElement("a");
+                    a.href = URL.createObjectURL(blob);
+                    a.download = "QRCode.jpg";
+                    a.click();
+                    URL.revokeObjectURL(a.href);
 
-a.href=currentURL;
+                }
 
-a.download="QRCode.png";
+            }, "image/jpeg", 1.0);
 
-a.click();
+        };
 
-};
+        img.src = url;
 
-function saveHistory(txt,url){
+    } catch (err) {
 
-let data=JSON.parse(localStorage.getItem("history"))||[];
+        console.error(err);
 
-if(data.find(x=>x.text===txt)) return;
-
-data.unshift({
-
-text:txt,
-
-url:url,
-
-date:new Date().toLocaleString()
-
-});
-
-localStorage.setItem("history",JSON.stringify(data));
-
-loadHistory();
-
-}
-
-function loadHistory(){
-
-history.innerHTML="";
-
-let data=JSON.parse(localStorage.getItem("history"))||[];
-
-data.forEach((item,index)=>{
-
-history.innerHTML+=`
-
-<div class="history-item">
-
-<p>${item.text}</p>
-
-<img src="${item.url}">
-
-<p>${item.date}</p>
-
-<button onclick="download('${item.url}')">
-
-Download
-
-</button>
-
-<button onclick="removeItem(${index})">
-
-Delete
-
-</button>
-
-</div>
-
-`;
-
-});
+    }
 
 }
-
-function removeItem(index){
-
-let data=JSON.parse(localStorage.getItem("history"))||[];
-
-data.splice(index,1);
-
-localStorage.setItem("history",JSON.stringify(data));
-
-loadHistory();
-
-}
-
-function download(url){
-
-const a=document.createElement("a");
-
-a.href=url;
-
-a.download="QRCode.png";
-
-a.click();
-
-}
-
-document.getElementById("clear").onclick=()=>{
-
-if(confirm("Clear all history?")){
-
-localStorage.removeItem("history");
-
-loadHistory();
-
-}
-
-};
