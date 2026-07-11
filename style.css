@@ -7,7 +7,7 @@ font-family:Arial,sans-serif;
 
 body{
 
-min-height:100vh;
+background:linear-gradient(135deg,#667eea,#764ba2);
 
 display:flex;
 
@@ -15,16 +15,15 @@ justify-content:center;
 
 align-items:center;
 
-background:linear-gradient(135deg,#667eea,#764ba2);
+min-height:100vh;
 
-padding:20px;
+padding:30px;
 
 }
 
 .container{
 
-width:100%;
-max-width:600px;
+width:420px;
 
 background:rgba(255,255,255,.15);
 
@@ -34,23 +33,25 @@ padding:25px;
 
 border-radius:20px;
 
-box-shadow:0 10px 25px rgba(0,0,0,.2);
-
-color:white;
+box-shadow:0 15px 30px rgba(0,0,0,.2);
 
 text-align:center;
+
+color:white;
 
 }
 
 h1{
+
 margin-bottom:20px;
+
 }
 
 input{
 
 width:100%;
 
-padding:14px;
+padding:15px;
 
 border:none;
 
@@ -58,21 +59,17 @@ border-radius:10px;
 
 outline:none;
 
-font-size:16px;
-
 margin-bottom:20px;
+
+font-size:16px;
 
 }
 
-.btn-group{
+.buttons{
 
 display:flex;
 
 gap:10px;
-
-flex-wrap:wrap;
-
-margin-bottom:20px;
 
 }
 
@@ -80,7 +77,7 @@ button{
 
 flex:1;
 
-padding:12px;
+padding:14px;
 
 border:none;
 
@@ -88,7 +85,11 @@ border-radius:10px;
 
 cursor:pointer;
 
-font-size:15px;
+font-size:16px;
+
+background:#00c6ff;
+
+color:white;
 
 transition:.3s;
 
@@ -98,47 +99,35 @@ button:hover{
 
 transform:translateY(-2px);
 
-}
-
-#generate{
-background:#00c853;
-color:white;
-}
-
-#downloadPNG{
-background:#2962ff;
-color:white;
-}
-
-#downloadJPG{
-background:#ff6d00;
-color:white;
-}
-
-.clear-btn{
-background:red;
-color:white;
-margin-top:15px;
-width:100%;
-}
-
-#qrcode{
-
-display:flex;
-
-justify-content:center;
-
-margin:20px 0;
+background:#0072ff;
 
 }
 
-#qrcode canvas{
+.qr-box{
 
-background:white;
+margin-top:25px;
 
-padding:10px;
+margin-bottom:25px;
 
-border-radius:10px;
+}
+
+.qr-box img{
+
+width:220px;
+
+display:none;
+
+margin:auto;
+
+}
+
+.history-title{
+
+margin:15px 0;
+
+font-size:20px;
+
+font-weight:bold;
 
 }
 
@@ -150,14 +139,32 @@ color:black;
 
 padding:10px;
 
-margin-top:10px;
-
 border-radius:10px;
 
-word-break:break-word;
+margin-bottom:12px;
 
 }
 
-.history-item p{
-margin-bottom:5px;
+.history-item img{
+
+width:100px;
+
+margin:10px 0;
+
+}
+
+.history-item button{
+
+margin-top:5px;
+
+width:100%;
+
+}
+
+.clear{
+
+background:red;
+
+margin-top:15px;
+
 }
