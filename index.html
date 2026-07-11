@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QR Code Generator</title>
+<title>QR Code Generator Pro</title>
 
 <link rel="stylesheet" href="style.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 </head>
 <body>
@@ -17,41 +19,26 @@
 <input
 type="text"
 id="text"
-placeholder="Enter Text or URL">
+placeholder="Enter Text, URL, Email, Phone">
 
-<div class="buttons">
+<div class="btn-group">
 
-<button id="generate">
-Generate QR
+<button id="generate">Generate QR</button>
 
-</button>
+<button id="downloadPNG">Save PNG</button>
 
-<button id="download">
-
-Download
-
-</button>
+<button id="downloadJPG">Save JPG</button>
 
 </div>
 
-<div class="qr-box">
+<div id="qrcode"></div>
 
-<img id="qr">
-
-</div>
-
-<div class="history-title">
-
-History
-
-</div>
+<h2>History</h2>
 
 <div id="history"></div>
 
-<button class="clear" id="clear">
-
-Clear All History
-
+<button id="clearHistory" class="clear-btn">
+Clear History
 </button>
 
 </div>

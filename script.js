@@ -1,72 +1,236 @@
-// Save QR as JPG
-async function download(url) {
+const textInput = document.getElementById("text");
+const qrContainer = document.getElementById("qrcode");
+const historyDiv = document.getElementById("history");
 
-    try {
+let currentText = "";
 
-        // Load image
-        const img = new Image();
-        img.crossOrigin = "anonymous";
+loadHistory();
 
-        img.onload = async () => {
+document.getElementById("generate").addEventListener("click", generateQR);
 
-            // Create canvas
-            const canvas = document.createElement("canvas");
-            canvas.width = img.width;
-            canvas.height = img.height;
+async function generateQR() {
 
-            const ctx = canvas.getContext("2d");
+const text = textInput.value.trim();
 
-            // White background (JPG doesn't support transparency)
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+if (!text) {
+alert("Please enter text.");
+return;
+}
 
-            // Draw QR
-            ctx.drawImage(img, 0, 0);
+currentText = text;
 
-            // Convert to JPG
-            canvas.toBlob(async (blob) => {
+qrContainer.innerHTML = "";
 
-                if (window.showSaveFilePicker) {
+new QRCode(qrContainer, {
+text: text,
+width: 250,
+height: 250
+});
 
-                    const handle = await window.showSaveFilePicker({
+saveHistory(text);
+}
 
-                        suggestedName: "QRCode.jpg",
+async function saveFile(blob, filename, mimeType) {
 
-                        types: [{
-                            description: "JPEG Image",
-                            accept: {
-                                "image/jpeg": [".jpg"]
-                            }
-                        }]
+try {
 
-                    });
+if (window.showSaveFilePicker) {
 
-                    const writable = await handle.createWritable();
-                    await writable.write(blob);
-                    await writable.close();
+const handle = await window.showSaveFilePicker({
 
-                    alert("QR Code saved as JPG.");
+suggestedName: filename,
 
-                } else {
+types: [{
+description: mimeType,
+accept: {
+[mimeType]: [
+filename.endsWith(".png")
+? ".png"
+: ".jpg"
+]
+}
+}]
 
-                    const a = document.createElement("a");
-                    a.href = URL.createObjectURL(blob);
-                    a.download = "QRCode.jpg";
-                    a.click();
-                    URL.revokeObjectURL(a.href);
+});
 
-                }
+const writable = await handle.createWritable();
 
-            }, "image/jpeg", 1.0);
+await writable.write(blob);
 
-        };
+await writable.close();
 
-        img.src = url;
+} else {
 
-    } catch (err) {
+const a = document.createElement("a");
 
-        console.error(err);
+a.href = URL.createObjectURL(blob);
 
-    }
+a.download = filename;
+
+a.click();
 
 }
+
+} catch (e) {
+console.log(e);
+}
+}
+
+document.getElementById("downloadPNG").addEventListener("click", async () => {
+
+const canvas = qrContainer.querySelector("canvas");
+
+if (!canvas) {
+alert("Generate QR first.");
+return;
+}
+
+canvas.toBlob(async(blob)=>{
+
+await saveFile(
+blob,
+"QRCode.png",
+"image/png"
+);
+
+});
+});
+
+document.getElementById("downloadJPG").addEventListener("click", async () => {
+
+const canvas = qrContainer.querySelector("canvas");
+
+if (!canvas) {
+alert("Generate QR first.");
+return;
+}
+
+const jpgCanvas = document.createElement("canvas");
+
+jpgCanvas.width = canvas.width;
+jpgCanvas.height = canvas.height;
+
+const ctx = jpgCanvas.getContext("2d");
+
+ctx.fillStyle = "#ffffff";
+
+ctx.fillRect(
+0,
+0,
+jpgCanvas.width,
+jpgCanvas.height
+);
+
+ctx.drawImage(canvas,0,0);
+
+jpgCanvas.toBlob(async(blob)=>{
+
+await saveFile(
+blob,
+"QRCode.jpg",
+"image/jpeg"
+);
+
+},"image/jpeg",1);
+
+});
+
+function saveHistory(text){
+
+let history =
+JSON.parse(
+localStorage.getItem("qrHistory")
+) || [];
+
+if(history.includes(text)) return;
+
+history.unshift(text);
+
+localStorage.setItem(
+"qrHistory",
+JSON.stringify(history)
+);
+
+loadHistory();
+}
+
+function loadHistory(){
+
+historyDiv.innerHTML="";
+
+let history=
+JSON.parse(
+localStorage.getItem("qrHistory")
+) || [];
+
+history.forEach((item,index)=>{
+
+const div=document.createElement("div");
+
+div.className="history-item";
+
+div.innerHTML=`
+
+<p>${item}</p>
+
+<button onclick="reuseQR(${index})">
+
+Generate Again
+
+</button>
+
+<button onclick="deleteQR(${index})">
+
+Delete
+
+</button>
+
+`;
+
+historyDiv.appendChild(div);
+
+});
+}
+
+window.reuseQR=function(index){
+
+let history=
+JSON.parse(
+localStorage.getItem("qrHistory")
+) || [];
+
+textInput.value=history[index];
+
+generateQR();
+
+}
+
+window.deleteQR=function(index){
+
+let history=
+JSON.parse(
+localStorage.getItem("qrHistory")
+) || [];
+
+history.splice(index,1);
+
+localStorage.setItem(
+"qrHistory",
+JSON.stringify(history)
+);
+
+loadHistory();
+
+}
+
+document.getElementById("clearHistory").addEventListener("click",()=>{
+
+if(confirm("Clear all history?")){
+
+localStorage.removeItem("qrHistory");
+
+loadHistory();
+
+}
+
+});

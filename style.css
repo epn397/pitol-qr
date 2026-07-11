@@ -7,7 +7,7 @@ font-family:Arial,sans-serif;
 
 body{
 
-background:linear-gradient(135deg,#667eea,#764ba2);
+min-height:100vh;
 
 display:flex;
 
@@ -15,15 +15,16 @@ justify-content:center;
 
 align-items:center;
 
-min-height:100vh;
+background:linear-gradient(135deg,#667eea,#764ba2);
 
-padding:30px;
+padding:20px;
 
 }
 
 .container{
 
-width:420px;
+width:100%;
+max-width:600px;
 
 background:rgba(255,255,255,.15);
 
@@ -33,49 +34,21 @@ padding:25px;
 
 border-radius:20px;
 
-box-shadow:0 15px 30px rgba(0,0,0,.2);
-
-text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,.2);
 
 color:white;
+
+text-align:center;
 
 }
 
 h1{
-
 margin-bottom:20px;
-
 }
 
 input{
 
 width:100%;
-
-padding:15px;
-
-border:none;
-
-border-radius:10px;
-
-outline:none;
-
-margin-bottom:20px;
-
-font-size:16px;
-
-}
-
-.buttons{
-
-display:flex;
-
-gap:10px;
-
-}
-
-button{
-
-flex:1;
 
 padding:14px;
 
@@ -83,13 +56,39 @@ border:none;
 
 border-radius:10px;
 
-cursor:pointer;
+outline:none;
 
 font-size:16px;
 
-background:#00c6ff;
+margin-bottom:20px;
 
-color:white;
+}
+
+.btn-group{
+
+display:flex;
+
+gap:10px;
+
+flex-wrap:wrap;
+
+margin-bottom:20px;
+
+}
+
+button{
+
+flex:1;
+
+padding:12px;
+
+border:none;
+
+border-radius:10px;
+
+cursor:pointer;
+
+font-size:15px;
 
 transition:.3s;
 
@@ -99,35 +98,47 @@ button:hover{
 
 transform:translateY(-2px);
 
-background:#0072ff;
+}
+
+#generate{
+background:#00c853;
+color:white;
+}
+
+#downloadPNG{
+background:#2962ff;
+color:white;
+}
+
+#downloadJPG{
+background:#ff6d00;
+color:white;
+}
+
+.clear-btn{
+background:red;
+color:white;
+margin-top:15px;
+width:100%;
+}
+
+#qrcode{
+
+display:flex;
+
+justify-content:center;
+
+margin:20px 0;
 
 }
 
-.qr-box{
+#qrcode canvas{
 
-margin-top:25px;
+background:white;
 
-margin-bottom:25px;
+padding:10px;
 
-}
-
-.qr-box img{
-
-width:220px;
-
-display:none;
-
-margin:auto;
-
-}
-
-.history-title{
-
-margin:15px 0;
-
-font-size:20px;
-
-font-weight:bold;
+border-radius:10px;
 
 }
 
@@ -139,32 +150,14 @@ color:black;
 
 padding:10px;
 
+margin-top:10px;
+
 border-radius:10px;
 
-margin-bottom:12px;
+word-break:break-word;
 
 }
 
-.history-item img{
-
-width:100px;
-
-margin:10px 0;
-
-}
-
-.history-item button{
-
-margin-top:5px;
-
-width:100%;
-
-}
-
-.clear{
-
-background:red;
-
-margin-top:15px;
-
+.history-item p{
+margin-bottom:5px;
 }
